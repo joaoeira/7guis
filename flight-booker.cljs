@@ -71,11 +71,22 @@
   (reset! returning-bg color)
 )
 )
-;; function to set valid date state, too many repeats
+
 (defn validate-date [evt]
   (let [
     input (-> evt .-target .-value)
     id (-> evt .-target .-id)
+        
+    date (clojure.string/split input #"\.")
+    day (js/Number (get date 0))
+    month (js/Number (get date 1))
+    
+    valid-day (fn  [month, day]
+      (if (even? month)
+        (if (= 2 month)
+          (<= day 28)
+          (<= day 30))
+        (<= day 31)))
   ]
   
   (if (= id "outgoing")
@@ -86,7 +97,7 @@
   (if (character-validation input)
       (do
         (set-bg-color id "white")
-        (if (length-validation input)
+        (if (and (length-validation input) (valid-day month day))
           (change-date-validity-state id true)
           (change-date-validity-state id false))
       )
