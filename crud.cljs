@@ -41,17 +41,19 @@
       )] 
       {k v})))
 
+
 (defn update-entry [] 
   (if 
-    
-    (and (> (count ((keyword @active-id) @data)) 0)
     (and 
-     (> (count @active-name) 0) 
-     (> (count @active-surname) 0)))
+     (> (count ((keyword @active-id) @data)) 0)
+     (and 
+      (> (count @active-name) 0) 
+      (> (count @active-surname) 0)))
   (reset! data (update-in @data [(keyword @active-id)] assoc :name @active-name :surname @active-surname))
   )
 
 )
+
 (defn create-entry [] 
   (if (and (> (count @active-name) 0) (> (count @active-surname) 0))
   (reset! data (update-in @data [(keyword (random-uuid (rand 100)))] assoc :name @active-name :surname @active-surname))
